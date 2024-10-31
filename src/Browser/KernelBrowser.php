@@ -458,7 +458,9 @@ class KernelBrowser extends Browser
     {
         Assert::that($this->client()->getResponse()->headers->get($header))
             ->isNotNull('Header "{header}" is not present in the response.', ['header' => $header])
-            ->contains($expected, 'Header "{header}" is "{actual}", but "{expected}" expected.', ['header' => $header])
+            ->contains($expected, 'Header "{header}" value "{haystack}" is expected to contain "{needle}".', [
+                'header' => $header,
+            ])
         ;
 
         return $this;
