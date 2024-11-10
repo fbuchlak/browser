@@ -23,7 +23,8 @@ use Zenstruck\Browser\Session\KernelSession;
 use Zenstruck\Callback\Parameter;
 use Zenstruck\Dom\Selector;
 use Zenstruck\Foundry\Factory;
-use Zenstruck\Foundry\Proxy;
+use Zenstruck\Foundry\Persistence\Proxy;
+use Zenstruck\Foundry\Proxy as LegacyProxy;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -135,18 +136,23 @@ class KernelBrowser extends Browser
     }
 
     /**
-     * @param UserInterface|Proxy<UserInterface>|Factory<UserInterface> $user
+     * @param UserInterface $user
      *
      * @return static
      */
     public function actingAs(object $user, ?string $firewall = null): self
     {
-        if ($user instanceof Factory) {
-            $user = $user->create();
+        if ($user instanceof Factory) { // @phpstan-ignore-line
+            trigger_deprecation('zenstruck/browser', '1.9', 'Passing a Factory to actingAs() is deprecated, pass the created object instead.');
+            $user = $user->create(); // @phpstan-ignore-line
         }
 
-        if ($user instanceof Proxy) {
-            $user = $user->object();
+        if ($user instanceof LegacyProxy) { // @phpstan-ignore-line
+            $user = $user->object(); // @phpstan-ignore-line
+        }
+
+        if ($user instanceof Proxy) { // @phpstan-ignore-line
+            $user = $user->_real(); // @phpstan-ignore-line
         }
 
         if (!$user instanceof UserInterface) {
@@ -159,7 +165,7 @@ class KernelBrowser extends Browser
     }
 
     /**
-     * @param string|UserInterface|Proxy<UserInterface>|Factory<UserInterface>|null $as
+     * @param string|UserInterface|null $as
      *
      * @return static
      */
@@ -179,12 +185,17 @@ class KernelBrowser extends Browser
             return $this;
         }
 
-        if ($as instanceof Factory) {
-            $as = $as->create();
+        if ($as instanceof Factory) { // @phpstan-ignore-line
+            trigger_deprecation('zenstruck/browser', '1.9', 'Passing a Factory to assertAuthenticated() is deprecated, pass the created object instead.');
+            $as = $as->create(); // @phpstan-ignore-line
         }
 
-        if ($as instanceof Proxy) {
-            $as = $as->object();
+        if ($as instanceof LegacyProxy) { // @phpstan-ignore-line
+            $as = $as->object(); // @phpstan-ignore-line
+        }
+
+        if ($as instanceof Proxy) { // @phpstan-ignore-line
+            $as = $as->_real(); // @phpstan-ignore-line
         }
 
         if ($as instanceof UserInterface) {

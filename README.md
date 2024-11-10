@@ -320,9 +320,6 @@ $browser
     // authenticate a user for subsequent actions
     ->actingAs($user) // \Symfony\Component\Security\Core\User\UserInterface
 
-    // If using zenstruck/foundry, you can pass a factory/proxy
-    ->actingAs(UserFactory::new())
-
     // fail if authenticated
     ->assertNotAuthenticated()
 
@@ -332,8 +329,7 @@ $browser
     // fails if NOT authenticated as "kbond"
     ->assertAuthenticated('kbond')
 
-    // \Symfony\Component\Security\Core\User\UserInterface or, if using
-    // zenstruck/foundry, you can pass a factory/proxy
+    // \Symfony\Component\Security\Core\User\UserInterface
     ->assertAuthenticated($user)
 ;
 ```
@@ -462,7 +458,15 @@ $json = $browser
 
 ### PantherBrowser
 
-*The `PantherBrowser` is experimental in 1.0 and may be subject to BC Breaks.*
+> [!NOTE]
+> The `PantherBrowser` is experimental in 1.0 and may be subject to BC Breaks.
+
+> [!TIP]
+> By default, Panther will not start a web server if it detects one already running
+> with the Symfony CLI. This is likely running in your `dev` environment and will cause
+> unexpected test failures. Set the env variable `BROWSER_ALWAYS_START_WEBSERVER=1`
+> to always start a webserver configured for your current test env when running
+> Panther tests.
 
 This browser has the following extra methods:
 
@@ -666,17 +670,18 @@ $browser->assertSeeElement(ProductLinkSelector('Product 1', 'Edit'));
 
 There are several environment variables available to configure:
 
-| Variable                   | Description                                                                                | Default                            |
-|----------------------------|--------------------------------------------------------------------------------------------|------------------------------------|
-| `BROWSER_SOURCE_DIR`       | Directory to save source files to.                                                         | `./var/browser/source`             |
-| `BROWSER_SCREENSHOT_DIR`   | Directory to save screenshots to (only applies to `PantherBrowser`).                       | `./var/browser/screenshots`        |
-| `BROWSER_CONSOLE_LOG_DIR`  | Directory to save javascript console logs to (only applies to `PantherBrowser`).           | `./var/browser/console-logs`       |
-| `BROWSER_FOLLOW_REDIRECTS` | Whether to follow redirects by default (only applies to `KernelBrowser`).                  | `1` _(true)_                       |
-| `BROWSER_CATCH_EXCEPTIONS` | Whether to catch exceptions by default (only applies to `KernelBrowser`).                  | `1` _(true)_                       |
-| `BROWSER_SOURCE_DEBUG`     | Whether to add request metadata to written source files (only applies to `KernelBrowser`). | `0` _(false)_                      |
-| `KERNEL_BROWSER_CLASS`     | `KernelBrowser` class to use.                                                              | `Zenstruck\Browser\KernelBrowser`  |
-| `PANTHER_BROWSER_CLASS`    | `PantherBrowser` class to use.                                                             | `Zenstruck\Browser\PantherBrowser` |
-| `PANTHER_NO_HEADLESS`      | Disable headless-mode and allow usage of `PantherBrowser::pause()`.                        | `0` _(false)_                      |
+| Variable                         | Description                                                                                                            | Default                            |
+|----------------------------------|------------------------------------------------------------------------------------------------------------------------|------------------------------------|
+| `BROWSER_SOURCE_DIR`             | Directory to save source files to.                                                                                     | `./var/browser/source`             |
+| `BROWSER_SCREENSHOT_DIR`         | Directory to save screenshots to (only applies to `PantherBrowser`).                                                   | `./var/browser/screenshots`        |
+| `BROWSER_CONSOLE_LOG_DIR`        | Directory to save javascript console logs to (only applies to `PantherBrowser`).                                       | `./var/browser/console-logs`       |
+| `BROWSER_FOLLOW_REDIRECTS`       | Whether to follow redirects by default (only applies to `KernelBrowser`).                                              | `1` _(true)_                       |
+| `BROWSER_CATCH_EXCEPTIONS`       | Whether to catch exceptions by default (only applies to `KernelBrowser`).                                              | `1` _(true)_                       |
+| `BROWSER_SOURCE_DEBUG`           | Whether to add request metadata to written source files (only applies to `KernelBrowser`).                             | `0` _(false)_                      |
+| `KERNEL_BROWSER_CLASS`           | `KernelBrowser` class to use.                                                                                          | `Zenstruck\Browser\KernelBrowser`  |
+| `PANTHER_BROWSER_CLASS`          | `PantherBrowser` class to use.                                                                                         | `Zenstruck\Browser\PantherBrowser` |
+| `PANTHER_NO_HEADLESS`            | Disable headless-mode and allow usage of `PantherBrowser::pause()`.                                                    | `0` _(false)_                      |
+| `BROWSER_ALWAYS_START_WEBSERVER` | Always start a webserver configured for your current test env before running tests (only applies to `PantherBrowser`). | `0` _(false)_                      |
 
 ## Extending
 
